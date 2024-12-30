@@ -6,11 +6,6 @@ import fs from "fs/promises";
 import pdf from "pdf-parse";
 import EPub from "epub";
 
-const openai = createOpenAICompatible({
-  baseURL: process.env.OPENAI_API_BASE_URL,
-  headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
-});
-
 async function parsePdf(filePath: string) {
   const data = await pdf(await fs.readFile(filePath));
   return data.text;
@@ -62,6 +57,11 @@ ${text}
 --- END BOOK ---
     `,
   };
+
+  const openai = createOpenAICompatible({
+    baseURL: process.env.OPENAI_API_BASE_URL,
+    headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+  });
 
   const result = streamText({
     model: openai("google:gemini-1.5-pro-001"),
